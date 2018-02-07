@@ -1,0 +1,219 @@
+/*
+###########################################################################
+CSS for Typesetter CMS - 'OpenGraph' plugin
+Author: J. Krausz
+Date: 2016-09-14
+Version 1.0b1
+###########################################################################
+*/
+
+
+#admincontent_panel a.ogp-button {}
+#admincontent_panel a.ogp-button i.ogp-icon {}
+#admincontent_panel a.ogp-button i.ogp-icon:before {
+content:url(img/OpenGraph-white.svg);
+display:inline-block;
+position:relative;
+top:2px;
+margin:-3px 0;
+}
+
+#gp_admin_html .ogp-logo-color {
+display:inline-block;
+height:2em; 
+width:auto;
+margin:-0.25em 0.25em 0 -0.4em;
+}
+
+#gp_admin_html table.ogp-table {
+table-layout:fixed;
+}
+
+#gp_admin_html table.ogp-table .gpinput,
+#gp_admin_html table.ogp-table .gptextarea {
+width:100%;
+}
+
+#gp_admin_html table.ogp-table .gpinput:disabled,
+#gp_admin_html table.ogp-table .gptextarea:disabled {
+color:#888;
+background:#ddd;
+}
+
+#gp_admin_html table.ogp-table .gpinput:invalid,
+#gp_admin_html table.ogp-table .gptextarea:invalid {
+background:#F9A67C;
+}
+
+#gp_admin_html table.ogp-table select.gpinput {
+-webkit-appearance:none;
+-moz-appearance:none;
+appearance:none;
+background:transparent url(img/select_arr.png) right center no-repeat;
+background-size:22px 16px;
+padding-right:26px;
+}
+#gp_admin_html table.ogp-table select.gpinput::-ms-expand { display:none; }
+
+#gp_admin_html table.ogp-table .gpinput.has-helper,
+#gp_admin_html table.ogp-table .gptextarea.has-helper {
+border-radius:6px 6px 0 0;
+}
+
+#gp_admin_html table.ogp-table .gptextarea {
+resize:vertical;
+}
+
+
+#gp_admin_html table.ogp-table label.ogp-auto-value {
+float:right;
+margin:2px 4px;
+}
+
+#gp_admin_html table.ogp-table label.ogp-checkbox {
+display:inline-block;
+cursor:pointer;
+}
+
+#gp_admin_html table.ogp-table label.ogp-checkbox input[type='checkbox'] {
+display:none;
+}
+
+
+#gp_admin_html table.ogp-table label.ogp-checkbox input[type='checkbox'] + span:before {
+display:inline-block;
+text-align:center;
+margin-left:4px;
+font-family:FontAwesome!important;
+font-size:132%!important;
+line-height:0!important;
+position:relative;
+top:2px;
+content:"\f204";
+}
+
+#gp_admin_html table.ogp-table label.ogp-checkbox input[type='checkbox']:checked + span:before {
+content:"\f205";
+}
+
+
+
+
+
+.ogp-text-large { 
+font-size:115%!important; 
+line-height:1.25em!important;
+margin:3px 0;
+}
+
+.ogp-text-small { 
+font-size:82.5%!important; 
+line-height:1.25em!important;
+margin:3px 0;
+}
+
+#gp_admin_html .ogp-table a.gpsubmit {
+margin-top:5px;
+}
+
+.ogp-select-file-btn {
+display:block!important;
+width:192px;
+margin:0!important;
+text-align:center;
+}
+
+.ogp-helper {
+border:1px solid #ddd;
+margin-top:-2px;
+background:#eee;
+border-radius:0 0 6px 6px;
+padding:3px;
+}
+
+.ogp-image-preview,
+.ogp-image-preview-btns { 
+float:left;
+margin-bottom:3px;
+}
+
+.ogp-image-preview { 
+margin-right:3px;
+width:192px;
+height:auto;
+background: #ddd url(img/transp_pat.png) center center repeat;
+border:1px solid rgba(0,0,0,0.125);
+position:relative;
+overflow:hidden;
+cursor:pointer;
+}
+
+.ogp-facebook { height:100px; }
+.ogp-linkedin { height:116px; }
+/* only facebook and linkedin crop images */
+/*
+.ogp-twitter,
+.ogp-googleplus,
+.ogp-pinterest { height:auto; }
+*/
+
+
+.ogp-image-preview img {
+display:block;
+position:relative;
+width:192px;
+}
+
+.ogp-image-preview .ogp-image-bg {
+position:absolute;
+z-index:10;
+top:0;
+right:0;
+bottom:0;
+left:0;
+background-size:cover;
+background-position:center center;
+}
+
+.ogp-image-preview.ogp-facebook img, 
+.ogp-image-preview.ogp-linkedin img {
+position:absolute;
+left:0;
+top:50%;
+height:auto;
+-webkit-transform:translate(-50% -50%);
+-moz-transform:translate(-50% -50%);
+-ms-transform:translate(-50% -50%);
+transform:translate(-50% -50%);
+}
+
+#gp_admin_html .ogp-image-preview-btns a.gpcancel {
+display:block;
+margin-bottom:3px;
+}
+
+#gp_admin_html .ogp-image-preview-btns a.gpcancel:last-child {
+margin-bottom:0;
+}
+
+
+.ogp-char-counter {
+padding:2px 4px;
+color:#aaa;
+}
+
+
+
+
+
+/* responsive admin box */
+
+#gp_admin_box.gpabox-large-responsive {
+left:50vw!important;
+width:1440px;
+max-width:calc(100vw - 80px);
+-webkit-transform:translateX(-50%);
+transform:translateX(-50%);
+}
+
+#gp_admin_box.gpabox-large-responsive #gp_admin_boxc { width:auto!important; }
