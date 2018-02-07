@@ -21,5 +21,13 @@ See also [Typesetter Home](http://www.typesettercms.com), [Typesetter on GitHub]
 2. Upload the extracted folder 'OpenGraph-master' to your server into the /addons directory
 3. Install using Typesetter's Admin Toolbox &rarr; Plugins &rarr; Manage &rarr; Available &rarr; Lazy Loading Sections
 
+## Screenshots
+
+Default Settings (via Admin Page)
+![Screenshot](/docs/screenshot-default-settings.png?raw=true)
+
+Page Settings (modal box via Admin Top Bar link)
+![Screenshot](/docs/screenshot-page-settings.png?raw=true)
+
 ## License
 GPL 2
