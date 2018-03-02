@@ -366,7 +366,8 @@ class OpenGraph{
           case 'og:image':
           case 'og:video':
           case 'og:audio':
-            $content = urlencode(self::UrlPrefix($content, 'add'));
+            //$content = urlencode(self::UrlPrefix($content, 'add'));
+            $content = self::UrlPrefix($content, 'add');
             break;
         }
       }else{
@@ -464,11 +465,12 @@ class OpenGraph{
         self::$ogp_settings[$property] = 'default';
       }
     }
+  
     if( $page->requested != "Admin_OpenGraph" ){
-      self::$ogp_data=\gp\tool\Plugins::Filter('OpenGraph', array(self::$ogp_data));
+      self::$ogp_data = \gp\tool\Plugins::Filter('OpenGraph', array(self::$ogp_data));
     }
-    // msg('ogp_settings: ' . pre(self::$ogp_settings));
-    // msg('ogp_data: ' . pre(self::$ogp_data));
+    //  msg('ogp_settings: ' . pre(self::$ogp_settings));
+    //  msg('ogp_data: ' . pre(self::$ogp_data));
   }
 
 
