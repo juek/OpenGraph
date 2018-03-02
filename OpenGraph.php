@@ -464,6 +464,9 @@ class OpenGraph{
         self::$ogp_settings[$property] = 'default';
       }
     }
+    if( $page->requested != "Admin_OpenGraph" ){
+      self::$ogp_data=\gp\tool\Plugins::Filter('OpenGraph', array(self::$ogp_data));
+    }
     // msg('ogp_settings: ' . pre(self::$ogp_settings));
     // msg('ogp_data: ' . pre(self::$ogp_data));
   }
