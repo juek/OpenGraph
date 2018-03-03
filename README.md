@@ -7,7 +7,7 @@ Set [OpenGraph](http://ogp.me) protocol meta tags for a whole Typesetter CMS web
 * Set your defaults for the whole website
 * All pages inherit the default settings unless overruled
 * Each setting may be changed individually per page
-* Support for [Simple Blog](https://www.typesettercms.com/Plugins/17_Simple_Blog)&rsquo; blog list, single posts and category pages (as of ver. 1.0-b3)
+* Support for [Simple Blog](https://www.typesettercms.com/Plugins/17_Simple_Blog)&rsquo;s blog list, single posts and category pages (as of ver. 1.0-b3)
 
 See also [Typesetter Home](http://www.typesettercms.com), [Typesetter on GitHub](https://github.com/Typesetter/Typesetter)
 
