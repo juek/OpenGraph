@@ -3,15 +3,16 @@
 ## About
 Set [OpenGraph](http://ogp.me) protocol meta tags for a whole Typesetter CMS website and for single pages.
 
-* Fields for go:title, og:url, og:image, og:site_name, og:description, og:video, og:audio, and og:locale
-* Set your defaults for the whole website.
-* All pages inherit the default settings unless overruled.
-* Each setting may be changed individually per page.
+* Fields for og:type, og:title, og:url, og:image, og:site_name, og:description, og:video, og:audio, and og:locale
+* Set your defaults for the whole website
+* All pages inherit the default settings unless overruled
+* Each setting may be changed individually per page
+* Support for [Simple Blog](https://www.typesettercms.com/Plugins/17_Simple_Blog)&rsquo; blog list, single posts and category pages (as of ver. 1.0-b3)
 
 See also [Typesetter Home](http://www.typesettercms.com), [Typesetter on GitHub](https://github.com/Typesetter/Typesetter)
 
 ## Current Version 
-1.0-b1
+1.0-b3
 
 ## Requirements ##
 * Typesetter CMS 5.0+

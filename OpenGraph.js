@@ -1,11 +1,10 @@
-/*
-###########################################################################
-JS/jQuery for Typesetter CMS - 'OpenGraoh' plugin
-Author: J. Krausz
-Date: 2016-09-14
-Version 1.0b1
-###########################################################################
-*/
+/**
+ * JS/jQuery for Typesetter CMS plugin 'OpenGraph'
+ *
+ * @package     OpenGraph
+ * @author      J. Krausz (http://typesetter-addons.grafikrausz.at)
+ * @version     1.0-b3
+ */
 
 var OpenGraphHelpers = {};
 

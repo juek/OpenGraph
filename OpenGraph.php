@@ -1,12 +1,11 @@
 <?php
-/*
-###########################################################################
-PHP class for Typesetter CMS - 'OpenGraph'  plugin
-Author: J. Krausz
-Date: 2016-09-14
-Version 1.0b1
-###########################################################################
-*/
+/**
+ * PHP class for Typesetter CMS plugin 'OpenGraph'
+ *
+ * @package     OpenGraph
+ * @author      J. Krausz (http://typesetter-addons.grafikrausz.at)
+ * @version     1.0-b3
+ */
 
 defined('is_running') or die('Not an entry point...');
 
@@ -14,11 +13,8 @@ class OpenGraph{
 
   static $ogp_data = array();
   static $ogp_settings = array();
-
   static $ogp_tags = array(
 
-
-    /*
     array(
       'property' => 'og:type',
       'hint' => 'optional:  The type of your object, e.g., &quot;website&quot;. Depending on the type you specify, other properties may also be required.',
@@ -29,18 +25,15 @@ class OpenGraph{
           array( 'value' => 'website',  'text' => 'website' ),
           array( 'value' => 'blog',     'text' => 'blog' ),
           array( 'value' => 'article',  'text' => 'article' ),
-          // array( 'value' => 'product',  'text' => 'product' ),
+          array( 'value' => 'product',  'text' => 'product' ),
         ),
-        'default_value' => array(''),
+        'default_value' => array('website'),
         'attributes' => array(
           'class' => 'gpinput has-helper',
-          'placeholder' => 'the type must not be empty!',
         ),
         'helpers' => array('type'),
       ),
     ),
-    */
-
 
     array(
       'property' => 'og:title',
@@ -329,12 +322,11 @@ class OpenGraph{
 
 
 
-
   /* 
    * Typesetter Action hook 
    */
   public function GetHead() {
-    global $page, $dirPrefix, $addonRelativeCode, $config;
+    global $page, $addonRelativeCode;
     if( \gp\tool::LoggedIn() ){
       $page->css_admin[] =    $addonRelativeCode . '/OpenGraph.css';
       $page->head_js[] =      $addonRelativeCode . '/OpenGraph.js';
@@ -356,7 +348,6 @@ class OpenGraph{
 
     self::GetOgpData();
     $page->head .= "\n<!-- OpenGraph start -->";
-    $page->head .= "\n" . '<meta property="og:type" content="website" />';
     foreach( self::$ogp_tags as $key => $tag_arr ){
       $property = $tag_arr['property'];
       if( isset(self::$ogp_data[$property]) ){
@@ -392,7 +383,7 @@ class OpenGraph{
     if( \gp\tool::LoggedIn() ){
 
       $page->admin_links[] = array(
-        $page->title, 
+        $page->requested, 
         '<i class="ogp-icon"></i> Open Graph', 
         'cmd=OpenGraphForm', 
         'title="set OpenGraph tags" class="ogp-button" data-cmd="gpabox"'
@@ -417,7 +408,7 @@ class OpenGraph{
         
         case 'SaveOgpData':
           self::SaveOgpData();
-          return 'return';
+          return $cmd;
           break;
       }
 
@@ -425,7 +416,6 @@ class OpenGraph{
     }
     return $cmd;
   }
-
 
 
 
@@ -450,52 +440,36 @@ class OpenGraph{
 
 
 
-
-  public function GetOgpData() {
-    global $page;
-    foreach( self::$ogp_tags as $key => $tag_arr ){
-      $property = $tag_arr['property'];
-      if( isset($page->TitleInfo['opengraph'][$property]) ){
-        // stored property for page
-        self::$ogp_data[$property] = $page->TitleInfo['opengraph'][$property];
-        self::$ogp_settings[$property] = 'custom';
-      }else{
-        // page property is undefined, get default value
-        self::$ogp_data[$property] = self::GetDefaultContent($property);
-        self::$ogp_settings[$property] = 'default';
-      }
-    }
-  
-    if( $page->requested != "Admin_OpenGraph" ){
-      self::$ogp_data = \gp\tool\Plugins::Filter('OpenGraph', array(self::$ogp_data));
-    }
-    //  msg('ogp_settings: ' . pre(self::$ogp_settings));
-    //  msg('ogp_data: ' . pre(self::$ogp_data));
-  }
-
-
-
-
-
   public function GetDefaultContent($property) {
     global $page, $config, $addonRelativeCode, $langmessage;
     $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
     $content = '';
+    $blog_page_title = self::GetBlogPageTitle();
+
     switch( $property ){
 
       case 'og:title':
         // use page label
-        $content = $page->gp_index ? $page->label : $langmessage['unavailable'];
+        $content = $page->TitleInfo['label'] ? $page->TitleInfo['label'] : $langmessage['unavailable'];
+        if( $blog_page_title ){
+          $content = str_replace('_', ' ', $blog_page_title);
+        }
         break;
 
       case 'og:type':
         // this is always 'website'
         $content = 'website';
+        if( $page->gp_index == 'special_blog' || $page->gp_index == 'special_blog_categories' ){
+          $content = 'blog';
+        }
+        if( $page->gp_index == 'special_blog' && $blog_page_title ){
+          $content = 'article';
+        }
         break;
 
       case 'og:url':
         // use page URL
-        $content = $protocol . \gp\tool::ServerName() . \gp\tool::GetUrl($page->title);
+        $content = $protocol . \gp\tool::ServerName() . \gp\tool::GetUrl($page->requested);
         break;
 
       case 'og:description':
@@ -558,20 +532,57 @@ class OpenGraph{
 
 
 
+  public function GetOgpData() {
+    global $page, $addonPathData;
+    $page_ogp_data = array();
+
+    if( isset($page->TitleInfo['opengraph']) ){
+      $page_ogp_data = $page->TitleInfo['opengraph'];
+    }
+
+    $blog_page_title = self::GetBlogPageTitle();
+    if( $blog_page_title ){
+      $ogp_data_file = $addonPathData . '/' . $page->gp_index . '.php'; 
+      if( file_exists($ogp_data_file) ){
+        include($ogp_data_file);
+        if( !empty($ogp_data[$blog_page_title]) ){
+          $page_ogp_data = $ogp_data[$blog_page_title];
+        }
+      }
+    }
+
+    foreach( self::$ogp_tags as $key => $tag_arr ){
+      $property = $tag_arr['property'];
+      if( isset($page_ogp_data[$property]) ){
+        // stored property for page
+        self::$ogp_data[$property] = $page_ogp_data[$property];
+        self::$ogp_settings[$property] = 'custom';
+      }else{
+        // page property is not defined, get default value
+        self::$ogp_data[$property] = self::GetDefaultContent($property);
+        self::$ogp_settings[$property] = 'default';
+      }
+    }
+  
+    if( $page->title ){
+      self::$ogp_data = \gp\tool\Plugins::Filter('OpenGraph', array(self::$ogp_data));
+    }
+    // msg('ogp_settings: ' . pre(self::$ogp_settings));
+    // msg('ogp_data: ' . pre(self::$ogp_data));
+  }
+
+
 
 
   public function SaveOgpData() {
-    global $config, $gp_index, $gp_titles, $dirPrefix;
-    $index = $_REQUEST['index'];
-    if( $index != 'ogp_set_config' && empty($gp_titles[$index]) ){
-      msg($langmessage['OOPS'].' (Page index [' . $index . '] does not exist!)');
-      return false;
-    }
+    global $page, $config, $gp_index, $gp_titles, $langmessage, $addonPathData;
+
     $opengraph_arr = array();
+    // overwrite defaults with post values
     foreach( self::$ogp_tags as $key => $tag_arr ){
       $property = $tag_arr['property'];
-      if( !empty($_REQUEST[$property]) ){
-        $content = trim($_REQUEST[$property]);
+      if( !empty($_POST[$property]) ){
+        $content = trim($_POST[$property]);
         switch( $property ){
           case 'og:url':
           case 'og:image':
@@ -584,28 +595,67 @@ class OpenGraph{
       }
     }
 
-    if( $index == 'ogp_set_config' ){
-      $config['opengraph'] = $opengraph_arr;
-      // msg("SaveConfig");
-      \gp\admin\Tools::SaveConfig(true,true);
-      
+    $blog_page_title = self::GetBlogPageTitle(); // returns false if page is not Simple Blog generated
+
+    if( !$page->gp_index ){
+      $save_to = 'site_config'; // admin page, default values posted
+    }elseif( $blog_page_title ){
+      $save_to = 'blog_info';   // page is a Simple Blog subpage (post or category)
     }else{
-      $gp_titles[$index]['opengraph'] = $opengraph_arr;
-      // msg("SavePagesPHP");
-      \gp\admin\Tools::SavePagesPHP(true,true);
+      $save_to = 'gp_titles';   // regular page
+    }
+
+    switch( $save_to ){
+
+      case 'gp_titles':
+        $gp_titles[$page->gp_index]['opengraph'] = $opengraph_arr;
+        \gp\admin\Tools::SavePagesPHP(true, true);
+        break;
+
+      case 'blog_info':
+        // $page->gp_index will be 'special_blog' or 'special_blog_categories'
+        $ogp_data_file = $addonPathData . '/' . $page->gp_index . '.php'; 
+        $ogp_data = array();
+        if( file_exists($ogp_data_file) ){
+          // load existing data
+          include($ogp_data_file);
+        }
+        $ogp_data[$blog_page_title] = $opengraph_arr;
+        if( \gp\tool\Files::SaveData($ogp_data_file, 'ogp_data', $ogp_data) ){
+          msg($langmessage['SAVED'] . ' (Simple Blog)');
+        }else{
+          msg($langmessage['OOPS'] . ' (Simple Blog)');
+        }
+        break;
+
+      case 'site_config':
+        $config['opengraph'] = $opengraph_arr;
+        \gp\admin\Tools::SaveConfig(true, true);
+        break;
+
     }
 
   }
 
 
 
+ /**
+  * For Simple Blog support
+  * @return (string)title of single blog post or blog category page
+  * @return (boolean)false if current page is not such a page
+  */
+  public function GetBlogPageTitle(){
+    global $page;
+    return substr($page->requested, strlen($page->title . '/')); 
+  }
+
+
 
 
   public function OgpForm($render_mode='admin'){
-    global $langmessage, $config, $page;
-
-    $form_action =      $page->gp_index ? \gp\tool::GetUrl($page->title) : \gp\tool::GetUrl('/Admin_OpenGraph');
-    $page_index  =      $page->gp_index ? $page->gp_index : 'ogp_set_config';
+    global $page, $langmessage, $config;
+    // msg('$page = ' . pre(get_object_vars($page)));
+    $form_action =      \gp\tool::GetUrl($page->requested);
     $data_cmd =         $page->gp_index ?  ' data-cmd="gppost" ' : '';
     $admin_box_close =  $page->gp_index ?  'admin_box_close ' : '';
 
@@ -619,17 +669,12 @@ class OpenGraph{
     echo      '</thead>';
     echo      '<tbody>';
 
-    // msg('self::$ogp_data = ' . pre(self::$ogp_data));
-
     foreach( self::$ogp_tags as $key => $tag_arr ){
-
       $property =  $tag_arr['property'];
-
       if( $render_mode == 'admin' && ($property == 'og:title' || $property == 'og:url' || $property == 'og:site_name' || $property == 'og:description') ){
         // on Admin Page/Defalt Settings don't render title, url, site_name and description
         continue;
       }
-    
 
       $content = !empty(self::$ogp_data[$property]) ? self::$ogp_data[$property] : '' ;
       switch( $property ){
@@ -679,7 +724,8 @@ class OpenGraph{
         case 'radio':
           foreach( $tag_arr['control']['values'] as $key => $value_arr ){
             $checked = $content == 'on' ? ' checked="checked" ' : ' ';
-            echo '<inputtype="radio"' . $attributes . $checked . $disabled . ' name="'. $property . '" value="' . $value_arr['value'] . '"/> ' . htmlspecialchars($value_arr['text']) . ' &nbsp;&nbsp;&nbsp;';
+            echo '<input type="radio"' . $attributes . $checked . $disabled . ' name="'. $property . '" ';
+            echo 'value="' . $value_arr['value'] . '"/> ' . htmlspecialchars($value_arr['text']) . ' &nbsp;&nbsp;&nbsp;';
           }
           break;
 
@@ -705,15 +751,12 @@ class OpenGraph{
     echo    '</span>';
 
     echo    '<input type="hidden" name="cmd" value="SaveOgpData"/> ';
-    echo    '<input type="hidden" name="index" value="' . $page_index . '"/> ';
     echo    '<input onclick="OpenGraphHelpers.destroy()" type="submit" name="" value="' . $langmessage['save'] . '" class="gpsubmit"' . $data_cmd . '/>';
     echo    '<input onclick="OpenGraphHelpers.destroy()" type="button" class="' . $admin_box_close . 'gpcancel" name="" value="' . $langmessage['cancel'] . '" />';
 
     echo  '</form>';
     
   }
-
-
 
 
 
@@ -746,6 +789,7 @@ class OpenGraph{
             echo  '<div class="ogp-char-counter"><span class="ogp-char-count"></span> ' . str_replace('%s ', '', $langmessage['_characters']) . '</div>';
             break;
 
+          case 'type':
           case 'site_name':
           case 'title':
           case 'url':
@@ -777,30 +821,28 @@ class OpenGraph{
   }
 
 
-
-
+ /**
+  * Multi-Language Manager Support
+  * @return (string) language code
+  */
   public function GetPageLanguage(){
     global $page, $config, $ml_object;
-
-    $ml_lang = false;
-    if( $ml_object ){ // only if Multi-Language Manager ist installed
+    if( !$ml_object ){ 
+      return $config['language'];
+    }else{
+      // only if Multi-Language Manager ist installed
       $ml_list = $ml_object->GetList($page->gp_index);
-      $ml_lang = is_array($ml_list) && ($ml_lang = array_search($page->gp_index, $ml_list)) !== false ? $ml_lang : false;
+      $ml_lang = is_array($ml_list) && ($ml_lang = array_search($page->gp_index, $ml_list)) !== false ? $ml_lang : $config['language'];
+      return $ml_lang;  
     }
-
-    $page_lang = $ml_lang ? $ml_lang : $config['language'];
-
-    return $page_lang;
   }
 
 
-
-
-  /* 
-   * Strips or adds protocol, server name and $dirPrefix 
-   * from/to internal URLs (starting with '/') 
-   * to store them in a portable format
-   */
+ /** 
+  * Strips or adds protocol, server name and $dirPrefix 
+  * from/to internal URLs (starting with '/') 
+  * to store them in a portable format
+  */
   public function UrlPrefix($url, $action=false){
     global $dirPrefix;
     $url_prefix = 
@@ -825,8 +867,4 @@ class OpenGraph{
   }
 
 
-
-} /* class OpenGraph --end */
-
-
-
+}
