@@ -325,7 +325,7 @@ class OpenGraph{
   /* 
    * Typesetter Action hook 
    */
-  public function GetHead() {
+  public static function GetHead() {
     global $page, $addonRelativeCode;
     if( \gp\tool::LoggedIn() ){
       $page->css_admin[] =    $addonRelativeCode . '/OpenGraph.css';
@@ -378,7 +378,7 @@ class OpenGraph{
   /* 
    * Typesetter Filter hook 
    */
-  public function PageRunScript($cmd) {
+  public static function PageRunScript($cmd) {
     global $page, $langmessage, $addonRelativeCode;
     if( \gp\tool::LoggedIn() ){
 
@@ -420,7 +420,7 @@ class OpenGraph{
 
 
 
-  public function AdminPage() {
+  public static function AdminPage() {
     global $page, $addonRelativeCode;
     $page->jQueryCode .= "\n/* OpenGraph start */\n" . 'OpenGraphHelpers.init();' . "\n/* OpenGraph end */\n";
     
@@ -440,7 +440,7 @@ class OpenGraph{
 
 
 
-  public function GetDefaultContent($property) {
+  public static function GetDefaultContent($property) {
     global $page, $config, $addonRelativeCode, $langmessage;
     $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
     $content = '';
@@ -450,9 +450,16 @@ class OpenGraph{
 
       case 'og:title':
         // use page label
-        $content = $page->TitleInfo['label'] ? $page->TitleInfo['label'] : $langmessage['unavailable'];
+        $content = $langmessage['unavailable'];
         if( $blog_page_title ){
+          // Blog pages
           $content = str_replace('_', ' ', $blog_page_title);
+        }elseif( isset($page->TitleInfo['label']) ){
+          // Regular pages
+          $content = $page->TitleInfo['label'];
+        }elseif( isset($page->TitleInfo['lang_index']) ){
+          // Special pages
+          $content = gpOutput::SelectText($page->TitleInfo['lang_index']);
         }
         break;
 
@@ -532,7 +539,7 @@ class OpenGraph{
 
 
 
-  public function GetOgpData() {
+  public static function GetOgpData() {
     global $page, $addonPathData;
     $page_ogp_data = array();
 
@@ -574,7 +581,7 @@ class OpenGraph{
 
 
 
-  public function SaveOgpData() {
+  public static function SaveOgpData() {
     global $page, $config, $gp_index, $gp_titles, $langmessage, $addonPathData;
 
     $opengraph_arr = array();
@@ -644,7 +651,7 @@ class OpenGraph{
   * @return (string)title of single blog post or blog category page
   * @return (boolean)false if current page is not such a page
   */
-  public function GetBlogPageTitle(){
+  public static function GetBlogPageTitle(){
     global $page;
     return substr($page->requested, strlen($page->title . '/')); 
   }
@@ -652,7 +659,7 @@ class OpenGraph{
 
 
 
-  public function OgpForm($render_mode='admin'){
+  public static function OgpForm($render_mode='admin'){
     global $page, $langmessage, $config;
     // msg('$page = ' . pre(get_object_vars($page)));
     $form_action =      \gp\tool::GetUrl($page->requested);
@@ -760,7 +767,7 @@ class OpenGraph{
 
 
 
-  public function GetHelpers($helpers=array(), $render_mode){
+  public static function GetHelpers($helpers=array(), $render_mode){
     global $langmessage;
     if( count($helpers) ){
       echo  '<div class="ogp-helper cf">';
@@ -825,7 +832,7 @@ class OpenGraph{
   * Multi-Language Manager Support
   * @return (string) language code
   */
-  public function GetPageLanguage(){
+  public static function GetPageLanguage(){
     global $page, $config, $ml_object;
     if( !$ml_object ){ 
       return $config['language'];
@@ -843,7 +850,7 @@ class OpenGraph{
   * from/to internal URLs (starting with '/') 
   * to store them in a portable format
   */
-  public function UrlPrefix($url, $action=false){
+  public static function UrlPrefix($url, $action=false){
     global $dirPrefix;
     $url_prefix = 
       ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://" )
