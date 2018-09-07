@@ -597,6 +597,8 @@ class OpenGraph{
           case 'og:audio':
             $content = self::UrlPrefix($content,'remove');
             break;
+          default : 
+            $content = htmlspecialchars($content);
         }
         $opengraph_arr[$property] = $content;
       }
