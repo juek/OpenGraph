@@ -69,7 +69,7 @@ OpenGraphHelpers.init = function(){
   $(".ogp-image-preview-btns a").on("click", function(){
     var socmed = $(this).attr("data-socialmedia");
     var img_prev = $(this).closest("td").find(".ogp-image-preview");
-    img_prev.removeClass("ogp-facebook ogp-linkedin ogp-twitter ogp-googleplus ogp-pinterest")
+    img_prev.removeClass("ogp-facebook ogp-linkedin ogp-twitter ogp-pinterest")
      .addClass("ogp-" + socmed);
   });
 

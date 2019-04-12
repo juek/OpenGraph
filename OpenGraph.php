@@ -786,7 +786,6 @@ class OpenGraph{
             echo  '</div>';
             echo  '<div class="ogp-image-preview-btns">';
             echo    '<a class="gpcancel" href="javascript:;" data-socialmedia="facebook"><i class="fa fa-fw fa-facebook-official"></i> facebook</a>';
-            echo    '<a class="gpcancel" href="javascript:;" data-socialmedia="googleplus"><i class="fa fa-fw fa-google-plus"></i> Google+</a>';
             echo    '<a class="gpcancel" href="javascript:;" data-socialmedia="linkedin"><i class="fa fa-fw fa-linkedin"></i> LinkedIn</a>';
             echo    '<a class="gpcancel" href="javascript:;" data-socialmedia="pinterest"><i class="fa fa-fw fa-pinterest"></i> Pinterest</a>';
             echo    '<a class="gpcancel" href="javascript:;" data-socialmedia="twitter"><i class="fa fa-fw fa-twitter"></i> Twitter</a>';
