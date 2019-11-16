@@ -12,7 +12,7 @@ Set [OpenGraph](http://ogp.me) protocol meta tags for a whole Typesetter CMS web
 See also [Typesetter Home](http://www.typesettercms.com), [Typesetter on GitHub](https://github.com/Typesetter/Typesetter)
 
 ## Current Version 
-1.0-b3
+1.0-b4
 
 ## Requirements ##
 * Typesetter CMS 5.0+

@@ -3,7 +3,7 @@
  *
  * @package     OpenGraph
  * @author      J. Krausz (http://typesetter-addons.grafikrausz.at)
- * @version     1.0-b3
+ * @version     1.0-b4
  */
 
 var OpenGraphHelpers = {};

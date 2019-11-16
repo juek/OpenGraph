@@ -4,7 +4,7 @@
  *
  * @package     OpenGraph
  * @author      J. Krausz (http://typesetter-addons.grafikrausz.at)
- * @version     1.0-b3
+ * @version     1.0-b4
  */
 
 defined('is_running') or die('Not an entry point...');
@@ -393,15 +393,17 @@ class OpenGraph{
         case 'OpenGraphForm':
           self::GetOgpData();
           ob_start();
-          echo  \gp\tool::Link('Admin_OpenGraph', 'Default Settings', '', 'class="gpsubmit" style="float:right;"');
-          echo  '<h4 style="margin-top:0;">';
-          echo    '<img src="' . $addonRelativeCode . '/img/OpenGraph-color.svg" class="ogp-logo-color" />';
-          echo    'Open Graph &raquo; ' . $langmessage['page_options'];
-          echo  '</h4>'; 
+          echo  '<div class="inline_box">';
+          echo    \gp\tool::Link('Admin_OpenGraph', $langmessage['general_settings'], '', 'style="float:right;"');
+          echo    '<h4 style="margin:-1em 0 1em 0;">';
+          echo      '<img src="' . $addonRelativeCode . '/img/OpenGraph-color.svg" class="ogp-logo-color" />';
+          echo      'Open Graph &raquo; ' . $langmessage['page_options'];
+          echo    '</h4>'; 
           self::OgpForm('page');
-          echo  '<script>';
-          echo  'OpenGraphHelpers.init();';
-          echo  '</script>';
+          echo    '<script>';
+          echo      'OpenGraphHelpers.init();';
+          echo    '</script>';
+          echo  '</div>';
           $page->contentBuffer = ob_get_clean();
           return 'return';
           break;
@@ -421,7 +423,7 @@ class OpenGraph{
 
 
   public static function AdminPage() {
-    global $page, $addonRelativeCode;
+    global $page, $addonRelativeCode, $langmessage;
     $page->jQueryCode .= "\n/* OpenGraph start */\n" . 'OpenGraphHelpers.init();' . "\n/* OpenGraph end */\n";
     
     $cmd = \gp\tool::GetCommand();
@@ -429,9 +431,9 @@ class OpenGraph{
       self::SaveOgpData();
     }
 
-    echo  '<h3>';
+    echo  '<h3 class="hqmargin">';
     echo    '<img src="' . $addonRelativeCode . '/img/OpenGraph-color.svg" class="ogp-logo-color" />';
-    echo    'Open Graph &raquo; Default Settings';
+    echo    'Open Graph &raquo; ' . $langmessage['general_settings'];
     echo  '</h3><br/>';
     self::GetOgpData();
     self::OgpForm('admin');
@@ -597,8 +599,6 @@ class OpenGraph{
           case 'og:audio':
             $content = self::UrlPrefix($content,'remove');
             break;
-          default : 
-            $content = htmlspecialchars($content);
         }
         $opengraph_arr[$property] = $content;
       }
@@ -777,7 +777,7 @@ class OpenGraph{
         switch( $helper ){
 
           case 'select_file':
-            echo  '<a href="#" class="ogp-select-file-btn gpsubmit">Select File</a>';
+            echo  '<a href="#" class="ogp-select-file-btn gpsubmit">' . $langmessage['uploaded_files'] . '</a>';
             break;
 
           case 'show_image':
@@ -786,7 +786,7 @@ class OpenGraph{
             echo  '</div>';
             echo  '<div class="ogp-image-preview-btns">';
             echo    '<a class="gpcancel" href="javascript:;" data-socialmedia="facebook"><i class="fa fa-fw fa-facebook-official"></i> facebook</a>';
-            echo    '<a class="gpcancel" href="javascript:;" data-socialmedia="googleplus"><i class="fa fa-fw fa-google-plus"></i> Google+</a>';
+            // echo    '<a class="gpcancel" href="javascript:;" data-socialmedia="googleplus"><i class="fa fa-fw fa-google-plus"></i> Google+</a>';
             echo    '<a class="gpcancel" href="javascript:;" data-socialmedia="linkedin"><i class="fa fa-fw fa-linkedin"></i> LinkedIn</a>';
             echo    '<a class="gpcancel" href="javascript:;" data-socialmedia="pinterest"><i class="fa fa-fw fa-pinterest"></i> Pinterest</a>';
             echo    '<a class="gpcancel" href="javascript:;" data-socialmedia="twitter"><i class="fa fa-fw fa-twitter"></i> Twitter</a>';
@@ -818,7 +818,7 @@ class OpenGraph{
           case 'locale':
             if( $render_mode == 'page'){
               $checked = self::$ogp_settings['og:' . $helper ] == 'default' ? ' checked="checked" ' : ' ';
-              echo  '<label class="ogp-checkbox ogp-auto-value" title="use default settings">';
+              echo  '<label class="ogp-checkbox ogp-auto-value" title="use ' . $langmessage['general_settings'] . '">';
               echo    '<input' . $checked . 'type="checkbox" data-helper-name="' . $helper . '"/><span></span> default';
               echo  '</label>';
             }

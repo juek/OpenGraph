@@ -3,7 +3,7 @@
  *
  * @package     OpenGraph
  * @author      J. Krausz (http://typesetter-addons.grafikrausz.at)
- * @version     1.0-b3
+ * @version     1.0-b4
  */
 
 #admincontent_panel a.ogp-button {}
@@ -20,7 +20,9 @@ margin:-3px 0;
 display:inline-block;
 height:2em; 
 width:auto;
-margin:-0.25em 0.25em 0 -0.4em;
+margin: 0 0.25em 0 -0.4em;
+position:relative; 
+top:0.65em;
 }
 
 #gp_admin_html table.ogp-table {
@@ -186,8 +188,8 @@ transform:translate(-50% -50%);
 }
 
 #gp_admin_html .ogp-image-preview-btns a.gpcancel {
-display:block;
-margin-bottom:3px;
+display:inline-block;
+margin:3px 6px 3px 0;
 }
 
 #gp_admin_html .ogp-image-preview-btns a.gpcancel:last-child {
