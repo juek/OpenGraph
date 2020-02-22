@@ -254,7 +254,7 @@ class OpenGraph{
           array( 'value' => 'nb_NO', 'text' => 'nb_NO &rarr; Norwegian (bokmal)' ),
           array( 'value' => 'nd_ZW', 'text' => 'nd_ZW &rarr; Ndebele' ),
           array( 'value' => 'ne_NP', 'text' => 'ne_NP &rarr; Nepali' ),
-          array( 'value' => 'nl_BE', 'text' => 'nl_BE &rarr; Dutch (België)' ),
+          array( 'value' => 'nl_BE', 'text' => 'nl_BE &rarr; Dutch (BelgiÃ«)' ),
           array( 'value' => 'nl_NL', 'text' => 'nl_NL &rarr; Dutch' ),
           array( 'value' => 'nn_NO', 'text' => 'nn_NO &rarr; Norwegian (nynorsk)' ),
           array( 'value' => 'ny_MW', 'text' => 'ny_MW &rarr; Chewa' ),
@@ -264,7 +264,7 @@ class OpenGraph{
           array( 'value' => 'ps_AF', 'text' => 'ps_AF &rarr; Pashto' ),
           array( 'value' => 'pt_BR', 'text' => 'pt_BR &rarr; Portuguese (Brazil)' ),
           array( 'value' => 'pt_PT', 'text' => 'pt_PT &rarr; Portuguese (Portugal)' ),
-          array( 'value' => 'qc_GT', 'text' => 'qc_GT &rarr; Quiché' ),
+          array( 'value' => 'qc_GT', 'text' => 'qc_GT &rarr; QuichÃ©' ),
           array( 'value' => 'qu_PE', 'text' => 'qu_PE &rarr; Quechua' ),
           array( 'value' => 'rm_CH', 'text' => 'rm_CH &rarr; Romansh' ),
           array( 'value' => 'ro_RO', 'text' => 'ro_RO &rarr; Romanian' ),
@@ -272,7 +272,7 @@ class OpenGraph{
           array( 'value' => 'rw_RW', 'text' => 'rw_RW &rarr; Kinyarwanda' ),
           array( 'value' => 'sa_IN', 'text' => 'sa_IN &rarr; Sanskrit' ),
           array( 'value' => 'sc_IT', 'text' => 'sc_IT &rarr; Sardinian' ),
-          array( 'value' => 'se_NO', 'text' => 'se_NO &rarr; Northern Sámi' ),
+          array( 'value' => 'se_NO', 'text' => 'se_NO &rarr; Northern SÃ¡mi' ),
           array( 'value' => 'si_LK', 'text' => 'si_LK &rarr; Sinhala' ),
           array( 'value' => 'sk_SK', 'text' => 'sk_SK &rarr; Slovak' ),
           array( 'value' => 'sl_SI', 'text' => 'sl_SI &rarr; Slovenian' ),
@@ -332,7 +332,7 @@ class OpenGraph{
       $page->head_js[] =      $addonRelativeCode . '/OpenGraph.js';
 
       $ogp_helper_data = array();
-      $ogp_helper_data['url_prefix']    = ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://" ) . \gp\tool::ServerName();
+      $ogp_helper_data['url_prefix']    = ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://" ) . \gp\tool::ServerName(false,true);
       $ogp_helper_data['url']           = self::GetDefaultContent('og:url');
       $ogp_helper_data['type']          = self::GetDefaultContent('og:type');
       $ogp_helper_data['site_name']     = self::GetDefaultContent('og:site_name');
@@ -478,7 +478,7 @@ class OpenGraph{
 
       case 'og:url':
         // use page URL
-        $content = $protocol . \gp\tool::ServerName() . \gp\tool::GetUrl($page->requested);
+        $content = $protocol . \gp\tool::ServerName(false,true) . \gp\tool::GetUrl($page->requested);
         break;
 
       case 'og:description':
@@ -512,7 +512,7 @@ class OpenGraph{
           $content = $config['opengraph']['og:image'];
         }else{
           // use plugin's preset image
-          $content = $protocol . \gp\tool::ServerName() . $addonRelativeCode . '/img/default_image.png';
+          $content = $protocol . \gp\tool::ServerName(false,true) . $addonRelativeCode . '/img/default_image.png';
         }
         break;
 
@@ -856,7 +856,7 @@ class OpenGraph{
     global $dirPrefix;
     $url_prefix = 
       ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://" )
-        . \gp\tool::ServerName()
+        . \gp\tool::ServerName(false,true)
         . $dirPrefix;
 
     switch( $action ){
